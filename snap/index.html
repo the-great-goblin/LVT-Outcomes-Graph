@@ -103,11 +103,26 @@ fetch('translations/english.csv')
 
 
 
-	function clicked(number) {	
-				console.log(number)
+	function clicked(number, eks, why) {	
+
 
 				const font_title = 44;
 				const font_body = 18;
+
+				let far_x = s.attr().width;
+				let far_y = s.attr().height;			
+
+				let pop_x = parseFloat(eks) - 100;
+				let pop_y = parseFloat(why) -100;
+
+				//Clamp the popup to visible part of screen
+				if (pop_x + pop_w > far_x ) {  pop_x = far_x - pop_w};
+				if (pop_x < 0 ) {  pop_x = 0};
+
+				if (pop_y + 600 > far_y ) {  pop_y = far_y - 600};
+				if (pop_y < 0 ) {  pop_y = 0};
+
+				console.log("whee! " +why, pop_x, pop_y);
 
 				var boxs = s.rect(pop_x, pop_y, pop_w,pop_h).attr({
 				    	fill: "#927F7F",
@@ -131,7 +146,7 @@ fetch('translations/english.csv')
 
 				var t_group = s.g()
 				var counter = 0;
-				console.log(candidate[1], bods, bods[0], popup_text[number]);
+
 				for (const element of bods) {
 
 					if (element.length > 80)
@@ -142,7 +157,6 @@ fetch('translations/english.csv')
 							{
 								while (temp_el.charAt(position) != " ")
 									{
-										console.log(element.substring(position));
 										position = position -1;
 									};
 	
@@ -176,7 +190,9 @@ fetch('translations/english.csv')
 					};
 				};
 
-				boxs.attr({height: font_title * 2  + (font_body * counter) + (font_title *2)	});
+				//adjust the height of the box 
+				let actual_box_height = font_title * 2  + (font_body * counter) + (font_title *2)
+				boxs.attr({height: actual_box_height 	});
 
 				//var tex2 = s.multitext(pop_x + pop_s, pop_y + pop_s + font_title * 2, candidate[1], 10).attr({
 				//	    font: "18px Arial",
@@ -204,6 +220,7 @@ fetch('translations/english.csv')
 				    	strokeWidth: 7
 					});
 				var box_group = s.g(box_close, box_close_x, box_close_x2, tex1, tex3, t_group)
+				console.log(box_group);
 				box_group.click(function(){
 					box_group.remove();
 					boxs.remove();
@@ -220,8 +237,8 @@ fetch('translations/english.csv')
 					});
 		};
 
-	var pop_x = 450;
-	var pop_y = 200;
+	var popx = 450;
+	var popy = 200;
 	var pop_w = 700;
 	var pop_h = 1000;
 	var pop_s = 40;
@@ -231,9 +248,10 @@ fetch('translations/english.csv')
 		// First lets create our drawing surface out of existing SVG element
 		// If you want to create new surface just provide dimensions
 		// like s = Snap(800, 600);
-		var s = Snap(1600,1200);
+		var s = Snap(1800,1200);
 
 		var c = s.image("LVT_Overview.png", 0, 0, 1600, 1200);
+		var graph_key = s.image("key.png", 0,0);
 		//var l = Snap.load("LVT_all_exp.svg", onSVGLoaded ) ;
 
 function onSVGLoaded( data ){ 
@@ -269,7 +287,7 @@ const doc = parser.parseFromString(data, "text/xml");
 
 //const res = doc.querySelector("symbol[label=square]");
 const res = doc.querySelectorAll("rect");
-console.log('res', res);
+
 
 
 		// We move the querySelectorAll result into an array so we can use the index position as an address.
@@ -290,14 +308,12 @@ console.log('res', res);
 		    strokeWidth: 0,
 			 opacity: 0.2
 		}).click(function(){ 
-				clicked(box_array.indexOf(element));
+				clicked(box_array.indexOf(element), element[0], element[1]);
 				}).mouseover(function(){ 
-				console.log("over") 
 				this.attr({
 					 opacity: 0.8
 					})
 				}).mouseout(function(){ 
-				console.log("out") 
 				this.attr({
 					 opacity: 0.2
 					})
