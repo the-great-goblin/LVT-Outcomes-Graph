@@ -92,7 +92,9 @@ function parseCSV(str) {
 }
 
 var popup_text = 'xoxoxo';
-fetch('translations/english.csv')
+var localization = 'magyar';
+
+fetch('translations/'+localization+'.csv')
   .then(response => response.text())
   .then((data) => {
 	popup_text = data;
@@ -121,8 +123,6 @@ fetch('translations/english.csv')
 
 				if (pop_y + 600 > far_y ) {  pop_y = far_y - 600};
 				if (pop_y < 0 ) {  pop_y = 0};
-
-				console.log("whee! " +why, pop_x, pop_y);
 
 				var boxs = s.rect(pop_x, pop_y, pop_w,pop_h).attr({
 				    	fill: "#927F7F",
@@ -220,7 +220,6 @@ fetch('translations/english.csv')
 				    	strokeWidth: 7
 					});
 				var box_group = s.g(box_close, box_close_x, box_close_x2, tex1, tex3, t_group)
-				console.log(box_group);
 				box_group.click(function(){
 					box_group.remove();
 					boxs.remove();
@@ -250,8 +249,12 @@ fetch('translations/english.csv')
 		// like s = Snap(800, 600);
 		var s = Snap(1800,1200);
 
-		var c = s.image("LVT_Overview.png", 0, 0, 1600, 1200);
-		var graph_key = s.image("key.png", 0,0);
+		//var c = s.image("LVT_Overview.png", 0, 0, 1600, 1200);
+		var c = s.image("translations/LVT_Overview_"+localization+".png", 0, 0, 1600, 1200);
+		//var c1 = s.image("translations/LVT_Overview_english.png", 0, 0, 1600, 1200);
+		
+		//var graph_key = s.image("key.png", 0,0);
+		var graph_key = s.image("translations/key_"+localization+".png", 0,0);
 		//var l = Snap.load("LVT_all_exp.svg", onSVGLoaded ) ;
 
 function onSVGLoaded( data ){ 
@@ -293,20 +296,18 @@ const res = doc.querySelectorAll("rect");
 		// We move the querySelectorAll result into an array so we can use the index position as an address.
 		box_array = []
 		res.forEach(function(element){
-			console.log(element,typeof(element), element.attributes["width"].value);
 			//box_array.push(element);
 			box_array.push([element.attributes["x"].value, element.attributes["y"].value, element.attributes["width"].value, element.attributes["height"].value])
 			});
 
 		for (const element of box_array) {
 		 //var temp_box = s.rect(element[0], element[1], element[2], element[3]).attr({
-		console.log(element);
 		 //var temp_box = s.rect(element.x.baseVal.value, element.y.baseVal.value, element.width.baseVal.value, element.height.baseVal.value).attr({
 		 var temp_box = s.rect(element[0], element[1], element[2], element[3]).attr({
 		    fill: "#bada55",
 		    stroke: "#000",
 		    strokeWidth: 0,
-			 opacity: 0.2
+			 opacity: 0.0
 		}).click(function(){ 
 				clicked(box_array.indexOf(element), element[0], element[1]);
 				}).mouseover(function(){ 
@@ -315,7 +316,7 @@ const res = doc.querySelectorAll("rect");
 					})
 				}).mouseout(function(){ 
 				this.attr({
-					 opacity: 0.2
+					 opacity: 0.0
 					})
 				});		
 		//});
